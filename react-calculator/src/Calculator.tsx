@@ -4,14 +4,14 @@ import './Calculator.css';
 import Result from './resultComponent/Result';
 
 export type CalculatorState = {
-   result: string
+   result: number
 }
 
 class Calculator extends Component<any, CalculatorState> {
   constructor(props: any){
     super(props);
     this.state = { 
-      result: this.props.defaultName 
+      result: 0
     };
   }
 
