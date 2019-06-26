@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Calculator.css';
 
-import NumberBtn from  './numberBtnComponent/NumberButton';
+import NumberButton from  './numberBtnComponent/NumberButton';
 import Result from './resultComponent/Result';
 
 export type CalculatorState = {
@@ -16,14 +16,18 @@ class Calculator extends Component<any, CalculatorState> {
     };
   }
 
+  numberClick = (value: number) =>{
+    console.log(value);
+  }
+
   render() {
     return (
       <div className="App">
         <Result value={0}/>
         
-        <NumberBtn value={7}/>
-        <NumberBtn value={8}/>
-        <NumberBtn value={9}/>
+        <NumberButton value={7} click={this.numberClick}/>
+        <NumberButton value={8} click={this.numberClick}/>
+        <NumberButton value={9} click={this.numberClick}/>
       </div>
     );
   }
