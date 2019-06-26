@@ -5,25 +5,31 @@ import NumberButton from  './numberBtnComponent/NumberButton';
 import Result from './resultComponent/Result';
 
 export type CalculatorState = {
-   result: number
+   result: number | null
 }
 
 class Calculator extends Component<any, CalculatorState> {
   constructor(props: any){
     super(props);
     this.state = { 
-      result: 0
+      result: null
     };
   }
 
   numberClick = (value: number) =>{
-    console.log(value);
+    if(this.state.result == null){
+      this.setState({result: value});
+    }else{
+      let number =  `${this.state.result}${value}`;
+      this.setState({result: +number});
+    }
   }
 
   render() {
+    console.log("rendering...")
     return (
       <div className="App">
-        <Result value={0}/>
+        <Result value={this.state.result}/>
         
         <NumberButton value={7} click={this.numberClick}/>
         <NumberButton value={8} click={this.numberClick}/>
