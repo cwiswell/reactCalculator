@@ -6,8 +6,10 @@ import FunctionButton from './functionBtnComponent/FunctionButton';
 import Result from './resultComponent/Result';
 
 export type CalculatorState = {
+   formula: string | null;
    result: number | null;
-   currentNumber: number ;
+   currentNumber: number | null;
+   previousNumber: number | null;
    currentOperator: string | null;
 }
 
@@ -15,14 +17,16 @@ class Calculator extends Component<any, CalculatorState> {
   constructor(props: any){
     super(props);
     this.state = { 
+      formula: null,
       result: null,
-      currentNumber: 0,
+      previousNumber: null,
+      currentNumber: null,
       currentOperator: null
     };
   }
 
   numberClick = (value: number) =>{
-    if(this.state.currentNumber == 0){
+    if(this.state.currentNumber == null){
       this.setState({currentNumber: value});
     }else{
       let number =  `${this.state.currentNumber}${value}`;
@@ -38,12 +42,41 @@ class Calculator extends Component<any, CalculatorState> {
       case "CE":
         this.clearCurrentNumber();
         break;
+      case "+":
+      case "-":
+      case "x":
+      case "÷":
+        this.arithmetic(value);
+        break;
     }
+  };
+
+  arithmetic(value: string){
+    let newformula = this.addOrUpdateLatestFormulaOperator(value);
+    if(newformula == null)
+    {
+      return;
+    }
+
+    this.setState({formula: newformula, currentOperator: value, currentNumber: null});
+  };
+
+  addOrUpdateLatestFormulaOperator(operator: string): string | null{
+    let formula = this.state.formula;
+    let curNum = this.state.currentNumber;
+    if(formula == null){
+      formula = `${curNum} ${operator}`;
+    }else if(this.state.currentNumber == null){
+      formula = `${formula.slice(0,-2)} ${operator}`;
+    }else{
+      formula = `${formula} ${curNum} ${operator}`;
+    }
+    return formula;
   };
 
   clearCurrentNumber(){
     this.setState({currentNumber: 0});
-  }
+  };
 
   backSpace(){
     if(this.state.currentNumber == null){
@@ -51,7 +84,7 @@ class Calculator extends Component<any, CalculatorState> {
     }
     let numberString = `${this.state.currentNumber}`;
     if(numberString.length < 2){
-      this.setState({currentNumber: 0});
+      this.setState({currentNumber: null});
       return;
     }
 
