@@ -7,7 +7,7 @@ import Result from './resultComponent/Result';
 
 export type CalculatorState = {
    result: number | null;
-   currentNumber: number | null;
+   currentNumber: number ;
    currentOperator: string | null;
 }
 
@@ -16,13 +16,13 @@ class Calculator extends Component<any, CalculatorState> {
     super(props);
     this.state = { 
       result: null,
-      currentNumber: null,
+      currentNumber: 0,
       currentOperator: null
     };
   }
 
   numberClick = (value: number) =>{
-    if(this.state.currentNumber == null){
+    if(this.state.currentNumber == 0){
       this.setState({currentNumber: value});
     }else{
       let number =  `${this.state.currentNumber}${value}`;
@@ -36,9 +36,14 @@ class Calculator extends Component<any, CalculatorState> {
         this.backSpace();
         break;
       case "CE":
+        this.clearCurrentNumber();
         break;
     }
   };
+
+  clearCurrentNumber(){
+    this.setState({currentNumber: 0});
+  }
 
   backSpace(){
     if(this.state.currentNumber == null){
@@ -46,7 +51,7 @@ class Calculator extends Component<any, CalculatorState> {
     }
     let numberString = `${this.state.currentNumber}`;
     if(numberString.length < 2){
-      this.setState({currentNumber: null});
+      this.setState({currentNumber: 0});
       return;
     }
 
