@@ -6,35 +6,58 @@ import FunctionButton from './functionBtnComponent/FunctionButton';
 import Result from './resultComponent/Result';
 
 export type CalculatorState = {
-   result: number | null
+   result: number | null;
+   currentNumber: number | null;
+   currentOperator: string | null;
 }
 
 class Calculator extends Component<any, CalculatorState> {
   constructor(props: any){
     super(props);
     this.state = { 
-      result: null
+      result: null,
+      currentNumber: null,
+      currentOperator: null
     };
   }
 
   numberClick = (value: number) =>{
-    if(this.state.result == null){
-      this.setState({result: value});
+    if(this.state.currentNumber == null){
+      this.setState({currentNumber: value});
     }else{
-      let number =  `${this.state.result}${value}`;
-      this.setState({result: +number});
+      let number =  `${this.state.currentNumber}${value}`;
+      this.setState({currentNumber: +number});
     }
   }
 
   functionClick = (value: string) => {
-    console.log(value);
+    switch(value){
+      case "<":
+        this.backSpace();
+        break;
+      case "CE":
+        break;
+    }
+  };
+
+  backSpace(){
+    if(this.state.currentNumber == null){
+      return;
+    }
+    let numberString = `${this.state.currentNumber}`;
+    if(numberString.length < 2){
+      this.setState({currentNumber: null});
+      return;
+    }
+
+    numberString = numberString.slice(0, -1);
+    this.setState({currentNumber: +numberString});
   };
 
   render() {
-    console.log("rendering...")
     return (
       <div className="App">
-        <Result value={this.state.result}/>
+        <Result value={this.state.currentNumber}/>
         
         <FunctionButton value={"CE"} click={this.functionClick} />
         <FunctionButton value={"C"} click={this.functionClick} />
