@@ -5,7 +5,7 @@ import NumberButton from  './numberBtnComponent/NumberButton';
 import FunctionButton from './functionBtnComponent/FunctionButton';
 import Result from './resultComponent/Result';
 
-export type CalculatorState = {
+type CalculatorState = {
    formula: string | null;
    result: number | null;
    currentNumber: number | null;
@@ -14,16 +14,14 @@ export type CalculatorState = {
 }
 
 class Calculator extends Component<any, CalculatorState> {
-  constructor(props: any){
-    super(props);
-    this.state = { 
-      formula: null,
-      result: null,
-      previousNumber: null,
-      currentNumber: null,
-      currentOperator: null
-    };
-  }
+  
+  state : CalculatorState = { 
+    formula: null,
+    result: null,
+    previousNumber: null,
+    currentNumber: null,
+    currentOperator: null
+  };
 
   numberClick = (value: number) =>{
     if(this.state.currentNumber == null){
