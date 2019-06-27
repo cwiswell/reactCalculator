@@ -111,6 +111,7 @@ class Calculator extends Component<any, CalculatorState> {
       case "+":
       case "-":
       case "x":
+      case "=":
         this.functionClick(event.key);
         break;
       case "/":
@@ -119,15 +120,12 @@ class Calculator extends Component<any, CalculatorState> {
       case "Backspace":
         this.functionClick("<");
         break;
-      case "Enter":
-        this.functionClick("+");
-        break;
     }
   }
 
   render() {
     return (
-      <div tabIndex={0} onKeyDown={this.handleKeyPress} className="container">
+      <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
         <div className="App">
           <Result value={this.state.currentNumber} formula={this.state.formula} />
 
