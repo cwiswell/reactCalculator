@@ -1,14 +1,20 @@
 import React from 'react';
 import './Result.css';
 
-export type ResultProp = {
+type ResultProp = {
+    formula: string | null;
     value: number | null;
 }
 
 const Result: React.FC<ResultProp> = (props) => {
     return (
       <div className="ResultWindow">
-          {props.value == null ? 0 : props.value}
+          <div className="FormulaWindow">
+            {props.formula}
+          </div>
+          <div className="CurrentNumber">
+            {props.value == null ? 0 : props.value}
+          </div>          
       </div>
     );
 }

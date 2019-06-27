@@ -93,7 +93,7 @@ class Calculator extends Component<any, CalculatorState> {
   render() {
     return (
       <div className="App">
-        <Result value={this.state.currentNumber}/>
+        <Result value={this.state.currentNumber} formula={this.state.formula}/>
         
         <FunctionButton value={"CE"} click={this.functionClick} />
         <FunctionButton value={"C"} click={this.functionClick} />
