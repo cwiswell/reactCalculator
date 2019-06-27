@@ -10,7 +10,7 @@ const Result: React.FC<ResultProp> = (props) => {
     return (
       <div className="ResultWindow">
           <div className="FormulaWindow">
-            {props.formula}
+            {props.formula == null ? " " : props.formula}
           </div>
           <div className="CurrentNumber">
             {props.value == null ? 0 : props.value}

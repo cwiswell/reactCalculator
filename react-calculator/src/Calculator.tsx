@@ -40,6 +40,9 @@ class Calculator extends Component<any, CalculatorState> {
       case "CE":
         this.clearCurrentNumber();
         break;
+      case "C":
+        this.reset();
+        break;
       case "+":
       case "-":
       case "x":
@@ -79,6 +82,16 @@ class Calculator extends Component<any, CalculatorState> {
   clearCurrentNumber() {
     this.setState({ currentNumber: 0 });
   };
+
+  reset() {
+    this.setState({
+      formula: null,
+      result: null,
+      previousNumber: null,
+      currentNumber: null,
+      currentOperator: null
+    });
+  }
 
   backSpace() {
     if (this.state.currentNumber == null) {
