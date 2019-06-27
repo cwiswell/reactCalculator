@@ -1,7 +1,7 @@
 import React from 'react';
 import './FunctionButton.css';
 
-export type FunctionButtonProp = {
+type FunctionButtonProp = {
     value: string;
     click: Function;
 }
