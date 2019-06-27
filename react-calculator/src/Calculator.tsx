@@ -62,7 +62,7 @@ class Calculator extends Component<any, CalculatorState> {
     let formula = this.state.formula;
     let curNum = this.state.currentNumber;
 
-    if(formula == null && this.state.currentNumber == null){
+    if (formula == null && this.state.currentNumber == null) {
       return null;
     }
 
@@ -107,6 +107,21 @@ class Calculator extends Component<any, CalculatorState> {
       case "8":
       case "9":
         this.numberClick(+event.key);
+        break;
+      case "+":
+      case "-":
+      case "x":
+        this.functionClick(event.key);
+        break;
+      case "/":
+        this.functionClick("÷");
+        break;
+      case "Backspace":
+        this.functionClick("<");
+        break;
+      case "Enter":
+        this.functionClick("+");
+        break;
     }
   }
 
