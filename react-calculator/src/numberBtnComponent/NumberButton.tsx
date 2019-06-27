@@ -1,7 +1,7 @@
 import React from 'react';
 import './NumberButton.css';
 
-export type NumberButtonProp = {
+type NumberButtonProp = {
     value: number;
     click: Function;
 }
