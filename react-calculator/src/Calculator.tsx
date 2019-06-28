@@ -26,7 +26,12 @@ class Calculator extends Component<any, CalculatorState> {
 
   numberClick = (value: number) => {
     if (this.state.currentNumber == null) {
-      this.setState({ currentNumber: value });
+      let newresult = this.state.result;
+      if(this.state.currentOperator != null){
+        newresult = this.state.previousNumber;
+      }
+
+      this.setState({ currentNumber: value, result: newresult});
     } else {
       let number = `${this.state.currentNumber}${value}`;
       this.setState({ currentNumber: +number });
@@ -56,6 +61,9 @@ class Calculator extends Component<any, CalculatorState> {
       case ".":
         this.decimalNumber();
         break;
+      case "=":
+        this.equalsButton();
+        break;
     }
   };
 
@@ -68,14 +76,46 @@ class Calculator extends Component<any, CalculatorState> {
     }
   }
 
+  equalsButton(){
+    if(this.state.currentNumber != null && this.state.currentOperator != null && this.state.result != null){
+      let newResult = this.performOperator(this.state.result, this.state.currentNumber, this.state.currentOperator);
+      let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
+      this.setState({result: newResult, formula: newFormula});
+    }
+  }
+
   arithmetic(value: string) {
     let newformula = this.addOrUpdateLatestFormulaOperator(value);
     if (newformula == null) {
       return;
     }
 
-    this.setState({ formula: newformula, currentOperator: value, currentNumber: null });
+    let newresult = this.state.result;
+    let prevNum = this.state.previousNumber;
+    if(this.state.currentNumber != null){
+      if(newresult != null){
+        newresult = this.performOperator(newresult, this.state.currentNumber, value);
+      }else{
+        prevNum = this.state.currentNumber;
+      }
+    }
+
+    this.setState({ formula: newformula, currentOperator: value, currentNumber: null, result: newresult, previousNumber: prevNum });
   };
+
+  performOperator(number1: number, number2: number, operator: string) : number {
+    switch(operator){
+      case "+":
+        return number1 + number2;
+      case "-":
+        return number1 - number2;
+      case "x":
+        return number1 * number2;
+      case "÷":
+        return number1 / number2;
+    }
+    return 0;
+  }
 
   addOrUpdateLatestFormulaOperator(operator: string): string | null {
     let formula = this.state.formula;
@@ -153,10 +193,11 @@ class Calculator extends Component<any, CalculatorState> {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
         <div className="App">
-          <Result value={this.state.currentNumber} formula={this.state.formula} />
+          <Result value={this.state.currentNumber == null ? this.state.result : this.state.currentNumber} formula={this.state.formula} />
 
           <FunctionButton value={"CE"} click={this.functionClick} />
           <FunctionButton value={"C"} click={this.functionClick} />
