@@ -4,6 +4,7 @@ import './Calculator.css';
 import NumberButton from './numberBtnComponent/NumberButton';
 import FunctionButton from './functionBtnComponent/FunctionButton';
 import Result from './resultComponent/Result';
+import { string } from 'prop-types';
 
 type CalculatorState = {
   formula: string | null;
@@ -49,8 +50,23 @@ class Calculator extends Component<any, CalculatorState> {
       case "÷":
         this.arithmetic(value);
         break;
+      case "±":
+        this.negateNumber();
+        break;
+      case ".":
+        this.decimalNumber();
+        break;
     }
   };
+
+  decimalNumber(){
+  }
+
+  negateNumber(){
+    if(this.state.currentNumber != null){
+      this.setState({currentNumber: this.state.currentNumber * -1});
+    }
+  }
 
   arithmetic(value: string) {
     let newformula = this.addOrUpdateLatestFormulaOperator(value);
