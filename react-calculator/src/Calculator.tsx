@@ -197,6 +197,9 @@ class Calculator extends Component<any, CalculatorState> {
       case "Backspace":
         this.functionClick("<");
         break;
+      case "Enter":
+        this.equalsButton();
+        break;
     }
   }
 

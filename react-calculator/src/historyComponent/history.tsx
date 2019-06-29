@@ -9,7 +9,7 @@ const History: React.FC<HistoryProp> = (props) => {
     return (
       <div className="historyWindow">
           {props.formulaHistory.map((value, key) =>{
-              return (<div key={key}> {value} </div>)
+              return (<div key={key} className="historyItem"> {value} </div>)
           })}
       </div>
     );
