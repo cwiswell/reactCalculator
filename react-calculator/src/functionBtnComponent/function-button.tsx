@@ -1,5 +1,5 @@
 import React from 'react';
-import './FunctionButton.css';
+import './function-button.css';
 
 type FunctionButtonProp = {
     value: string;
