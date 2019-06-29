@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Calculator.css';
 
-import NumberButton from './numberBtnComponent/NumberButton';
+import NumberButton from './numberBtnComponent/number-button';
 import FunctionButton from './functionBtnComponent/function-button';
 import Result from './resultComponent/Result';
 import { string } from 'prop-types';
