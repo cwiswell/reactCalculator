@@ -1,0 +1,9 @@
+.historyWindow {
+    width: 300px;    
+    height: 615px;
+    background-color: #49505e;
+    border: 1px solid maroon;
+    color: white;
+    text-align: right;
+    float: left;
+}

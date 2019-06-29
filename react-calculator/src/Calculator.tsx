@@ -4,7 +4,7 @@ import './Calculator.css';
 import NumberButton from './numberBtnComponent/number-button';
 import FunctionButton from './functionBtnComponent/function-button';
 import Result from './resultComponent/result';
-import { string } from 'prop-types';
+import History from './historyComponent/history';
 
 type CalculatorState = {
   formula: string | null;
@@ -13,6 +13,7 @@ type CalculatorState = {
   previousNumber: number | null;
   currentOperator: string | null;
   showResult: boolean;
+  history: Array<string>
 }
 
 class Calculator extends Component<any, CalculatorState> {
@@ -23,7 +24,8 @@ class Calculator extends Component<any, CalculatorState> {
     previousNumber: null,
     currentNumber: null,
     currentOperator: null,
-    showResult: false
+    showResult: false,
+    history: []
   };
 
   numberClick = (value: number) => {
@@ -82,6 +84,7 @@ class Calculator extends Component<any, CalculatorState> {
     if(this.state.currentNumber != null && this.state.currentOperator != null && this.state.result != null){
       let newResult = this.performOperator(this.state.result, this.state.currentNumber, this.state.currentOperator);
       let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
+      this.state.history.push(newFormula);
       this.setState({result: newResult, formula: newFormula, showResult: true});
     }
   }
@@ -234,7 +237,7 @@ class Calculator extends Component<any, CalculatorState> {
 
           <FunctionButton value={"="} click={this.functionClick} />
         </div>
-
+        <History formulaHistory={this.state.history} />
       </div>
     );
   }
