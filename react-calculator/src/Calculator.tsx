@@ -9,7 +9,7 @@ import History from './historyComponent/history';
 type CalculatorState = {
   formula: string | null;
   result: number | null;
-  currentNumber: number | null;
+  currentNumber: string | null;
   previousNumber: number | null;
   currentOperator: string | null;
   showResult: boolean;
@@ -35,10 +35,10 @@ class Calculator extends Component<any, CalculatorState> {
         newresult = this.state.previousNumber;
       }
 
-      this.setState({ currentNumber: value, result: newresult, showResult:false});
+      this.setState({ currentNumber: `${value}`, result: newresult, showResult:false});
     } else {
       let number = `${this.state.currentNumber}${value}`;
-      this.setState({ currentNumber: +number });
+      this.setState({ currentNumber: number });
     }
   }
 
@@ -72,17 +72,19 @@ class Calculator extends Component<any, CalculatorState> {
   };
 
   decimalNumber(){
+    
   }
 
   negateNumber(){
     if(this.state.currentNumber != null){
-      this.setState({currentNumber: this.state.currentNumber * -1});
+      let num = (+this.state.currentNumber) * -1;
+      this.setState({currentNumber: `${num}`});
     }
   }
 
   equalsButton(){
     if(this.state.currentNumber != null && this.state.currentOperator != null && this.state.result != null){
-      let newResult = this.performOperator(this.state.result, this.state.currentNumber, this.state.currentOperator);
+      let newResult = this.performOperator(this.state.result, +this.state.currentNumber, this.state.currentOperator);
       let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
       this.state.history.push(newFormula);
       this.setState({result: newResult, formula: null, showResult: true, currentNumber: null, currentOperator: null});
@@ -100,11 +102,11 @@ class Calculator extends Component<any, CalculatorState> {
     let showRes = false;
     if(this.state.currentNumber != null){
       if(newresult != null && this.state.currentOperator != null){
-        newresult = this.performOperator(newresult, this.state.currentNumber, this.state.currentOperator);
+        newresult = this.performOperator(newresult, +this.state.currentNumber, this.state.currentOperator);
         showRes = true;
         prevNum = newresult;
       }else{
-        prevNum = this.state.currentNumber;
+        prevNum = +this.state.currentNumber;
       }
     }
 
@@ -144,7 +146,7 @@ class Calculator extends Component<any, CalculatorState> {
   };
 
   clearCurrentNumber() {
-    this.setState({ currentNumber: 0 });
+    this.setState({ currentNumber: '0' });
   };
 
   reset() {
@@ -168,7 +170,7 @@ class Calculator extends Component<any, CalculatorState> {
     }
 
     numberString = numberString.slice(0, -1);
-    this.setState({ currentNumber: +numberString });
+    this.setState({ currentNumber: numberString });
   };
 
   handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -208,7 +210,7 @@ class Calculator extends Component<any, CalculatorState> {
     return (
       <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
         <div className="App">
-          <Result value={this.state.showResult ? this.state.result : this.state.currentNumber} formula={this.state.formula} />
+          <Result value={this.state.showResult ? `${this.state.result}` : this.state.currentNumber} formula={this.state.formula} />
 
           <FunctionButton value={"CE"} click={this.functionClick} />
           <FunctionButton value={"C"} click={this.functionClick} />

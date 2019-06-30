@@ -3,7 +3,7 @@ import './result.css';
 
 type ResultProp = {
     formula: string | null;
-    value: number | null;
+    value: string | null;
 }
 
 const Result: React.FC<ResultProp> = (props) => {
