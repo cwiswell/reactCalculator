@@ -13,7 +13,7 @@ const Result: React.FC<ResultProp> = (props) => {
             {props.formula == null ? " " : props.formula}
           </div>
           <div className="CurrentNumber">
-            {props.value == null ? 0 : props.value}
+            {props.value == null || props.value == "null" ? 0 : props.value}
           </div>          
       </div>
     );

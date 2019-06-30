@@ -72,7 +72,13 @@ class Calculator extends Component<any, CalculatorState> {
   };
 
   decimalNumber(){
-    
+    if(this.state.currentNumber == null){
+      this.setState({currentNumber: '0.'});
+    }else if(this.state.currentNumber.indexOf('.') < 0){
+      this.setState({currentNumber: `${this.state.currentNumber}.`});
+    }else{
+      return;
+    }
   }
 
   negateNumber(){
