@@ -85,7 +85,7 @@ class Calculator extends Component<any, CalculatorState> {
       let newResult = this.performOperator(this.state.result, this.state.currentNumber, this.state.currentOperator);
       let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
       this.state.history.push(newFormula);
-      this.setState({result: newResult, formula: newFormula, showResult: true});
+      this.setState({result: newResult, formula: null, showResult: true, currentNumber: null, currentOperator: null});
     }
   }
 
