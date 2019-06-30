@@ -13,6 +13,8 @@ type CalculatorState = {
   previousNumber: number | null;
   currentOperator: string | null;
   showResult: boolean;
+  showError: boolean;
+  errorMessage: string | null;
   history: Array<string>
 }
 
@@ -25,17 +27,25 @@ class Calculator extends Component<any, CalculatorState> {
     currentNumber: null,
     currentOperator: null,
     showResult: false,
+    showError: false,
+    errorMessage: null,
     history: []
   };
 
   numberClick = (value: number) => {
     if (this.state.currentNumber == null) {
+      let currentOper = this.state.currentOperator;
       let newresult = this.state.result;
-      if(this.state.currentOperator != null){
+
+      if(currentOper != null){
+        if(currentOper == "÷" && value == 0){
+          this.setState({currentNumber: null, currentOperator: null, errorMessage: "Cannot divide by Zero", showError: true, result: null, formula: null})
+          return;
+        }
         newresult = this.state.previousNumber;
       }
 
-      this.setState({ currentNumber: `${value}`, result: newresult, showResult:false});
+      this.setState({ currentNumber: `${value}`, result: newresult, showResult:false, showError: false, errorMessage: null});
     } else {
       let number = `${this.state.currentNumber}${value}`;
       this.setState({ currentNumber: number });
@@ -212,11 +222,20 @@ class Calculator extends Component<any, CalculatorState> {
   }
 
   render() {
+    let resultValue : string | null = "";
+    if(this.state.showError){
+      resultValue = this.state.errorMessage;
+    }else if(this.state.showResult){
+      resultValue = `${this.state.result}`;
+    }else{
+      resultValue = this.state.currentNumber;
+    }
+    //let resultValue = this.state.showResult ? `${this.state.result}` : this.state.currentNumber;
     console.log(this.state);
     return (
       <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
         <div className="App">
-          <Result value={this.state.showResult ? `${this.state.result}` : this.state.currentNumber} formula={this.state.formula} />
+          <Result value={resultValue} formula={this.state.formula} />
 
           <FunctionButton value={"CE"} click={this.functionClick} />
           <FunctionButton value={"C"} click={this.functionClick} />
