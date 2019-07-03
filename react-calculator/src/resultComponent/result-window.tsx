@@ -1,5 +1,5 @@
 import React from 'react';
-import './result.css';
+import './result-window.css';
 
 type ResultProp = {
     formula: string | null;

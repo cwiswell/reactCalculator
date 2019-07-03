@@ -3,7 +3,7 @@ import './Calculator.css';
 
 import NumberButton from './numberBtnComponent/number-button';
 import FunctionButton from './functionBtnComponent/function-button';
-import Result from './resultComponent/result';
+import Result from './resultComponent/result-window';
 import History from './historyComponent/history';
 
 type CalculatorState = {

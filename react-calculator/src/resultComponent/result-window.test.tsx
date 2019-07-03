@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Result from './result';
+import Result from './result-window';
 
 describe("result component tests", () => {
 
