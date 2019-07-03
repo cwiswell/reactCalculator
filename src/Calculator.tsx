@@ -33,12 +33,12 @@ class Calculator extends Component<any, CalculatorState> {
   };
 
   numberClick = (value: number) => {
-    if (this.state.currentNumber == null) {
+    if (this.state.currentNumber === null) {
       let currentOper = this.state.currentOperator;
       let newresult = this.state.result;
 
-      if(currentOper != null){
-        if(currentOper == "÷" && value == 0){
+      if(currentOper !== null){
+        if(currentOper === "÷" && value === 0){
           this.setState({currentNumber: null, currentOperator: null, errorMessage: "Cannot divide by Zero", showError: true, result: null, formula: null})
           return;
         }
@@ -82,11 +82,11 @@ class Calculator extends Component<any, CalculatorState> {
   };
 
   decimalNumber(){
-    if(this.state.currentNumber == null){
+    if(this.state.currentNumber === null){
       let currentOper = this.state.currentOperator;
       let newresult = this.state.result;
 
-      if(currentOper != null){
+      if(currentOper !== null){
         newresult = this.state.previousNumber;
       }
       this.setState({currentNumber: '0.', result: newresult});
@@ -98,14 +98,14 @@ class Calculator extends Component<any, CalculatorState> {
   }
 
   negateNumber(){
-    if(this.state.currentNumber != null){
+    if(this.state.currentNumber !== null){
       let num = (+this.state.currentNumber) * -1;
       this.setState({currentNumber: `${num}`});
     }
   }
 
   equalsButton(){
-    if(this.state.currentNumber != null && this.state.currentOperator != null && this.state.result != null){
+    if(this.state.currentNumber !== null && this.state.currentOperator !== null && this.state.result !== null){
       let newResult = this.performOperator(this.state.result, +this.state.currentNumber, this.state.currentOperator);
       let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
       this.state.history.push(newFormula);
@@ -115,15 +115,15 @@ class Calculator extends Component<any, CalculatorState> {
 
   arithmetic(value: string) {
     let newformula = this.addOrUpdateLatestFormulaOperator(value);
-    if (newformula == null) {
+    if (newformula === null) {
       return;
     }
 
     let newresult = this.state.result;
     let prevNum = this.state.previousNumber;
     let showRes = false;
-    if(this.state.currentNumber != null){
-      if(newresult != null && this.state.currentOperator != null){
+    if(this.state.currentNumber !== null){
+      if(newresult !== null && this.state.currentOperator !== null){
         newresult = this.performOperator(newresult, +this.state.currentNumber, this.state.currentOperator);
         showRes = true;
         prevNum = newresult;
@@ -153,13 +153,13 @@ class Calculator extends Component<any, CalculatorState> {
     let formula = this.state.formula;
     let curNum = this.state.currentNumber;
 
-    if (formula == null && this.state.currentNumber == null) {
+    if (formula === null && this.state.currentNumber === null) {
       return null;
     }
 
-    if (formula == null) {
+    if (formula === null) {
       formula = `${curNum} ${operator}`;
-    } else if (this.state.currentNumber == null) {
+    } else if (this.state.currentNumber === null) {
       formula = `${formula.slice(0, -2)} ${operator}`;
     } else {
       formula = `${formula} ${curNum} ${operator}`;
@@ -182,7 +182,7 @@ class Calculator extends Component<any, CalculatorState> {
   }
 
   backSpace() {
-    if (this.state.currentNumber == null) {
+    if (this.state.currentNumber === null) {
       return;
     }
     let numberString = `${this.state.currentNumber}`;
@@ -236,7 +236,7 @@ class Calculator extends Component<any, CalculatorState> {
     }else{
       resultValue = this.state.currentNumber;
     }
-    //let resultValue = this.state.showResult ? `${this.state.result}` : this.state.currentNumber;
+    
     console.log(this.state);
     return (
       <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
