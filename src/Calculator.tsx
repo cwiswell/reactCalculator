@@ -237,7 +237,7 @@ class Calculator extends Component<any, CalculatorState> {
       resultValue = this.state.currentNumber;
     }
     
-    console.log(this.state);
+    //console.log(this.state);
     return (
       <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
         <div className="App">
