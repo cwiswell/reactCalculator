@@ -83,7 +83,13 @@ class Calculator extends Component<any, CalculatorState> {
 
   decimalNumber(){
     if(this.state.currentNumber == null){
-      this.setState({currentNumber: '0.'});
+      let currentOper = this.state.currentOperator;
+      let newresult = this.state.result;
+
+      if(currentOper != null){
+        newresult = this.state.previousNumber;
+      }
+      this.setState({currentNumber: '0.', result: newresult});
     }else if(this.state.currentNumber.indexOf('.') < 0){
       this.setState({currentNumber: `${this.state.currentNumber}.`});
     }else{
