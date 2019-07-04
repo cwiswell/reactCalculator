@@ -30,4 +30,4 @@ describe("function button component tests", () => {
 
     expect(mockFn.mock.calls.length).toEqual(1);
   });
-})
+});
