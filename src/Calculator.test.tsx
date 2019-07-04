@@ -11,7 +11,7 @@ describe('calculator tests', () =>{
   });
 
   it('shallow renders without crashing', () => {
-    shallow(<Calculator />);
+    const calc = shallow(<Calculator />);
   })
 });
 

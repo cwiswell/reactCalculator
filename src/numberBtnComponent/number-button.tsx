@@ -3,7 +3,7 @@ import './number-button.css';
 
 type NumberButtonProp = {
     value: number;
-    click: Function;
+    click: (value: number) => void;
 }
 
 const NumberButton: React.FC<NumberButtonProp> = (props) => {
