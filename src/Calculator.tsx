@@ -6,7 +6,7 @@ import FunctionButton from './functionBtnComponent/function-button';
 import Result from './resultComponent/result-window';
 import History from './historyComponent/history';
 
-const Calculator: React.FC<any> = (props) => {
+const Calculator: React.FC<any> = () => {
   const [formulaState, setFormulaState] = useState<string | null>(null);
   const [resultState, setResultState] = useState<number | null>(null);
   const [prevNumberState, setPrevNumberState] = useState<number | null>(null);
@@ -15,8 +15,7 @@ const Calculator: React.FC<any> = (props) => {
   const [showResult, setShowResult] = useState<boolean>(false);
   const [showError, setShowError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [history, setHistory] = useState<Array<string>>([]);
-  
+  const [history] = useState<Array<string>>([]);  
 
   const numberClick = (value: number) => {
     if (currentNumber === null) {
