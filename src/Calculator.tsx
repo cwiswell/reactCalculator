@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './Calculator.css';
 
 import NumberButton from './numberBtnComponent/number-button';
@@ -6,137 +6,139 @@ import FunctionButton from './functionBtnComponent/function-button';
 import Result from './resultComponent/result-window';
 import History from './historyComponent/history';
 
-type CalculatorState = {
-  formula: string | null;
-  result: number | null;
-  currentNumber: string | null;
-  previousNumber: number | null;
-  currentOperator: string | null;
-  showResult: boolean;
-  showError: boolean;
-  errorMessage: string | null;
-  history: Array<string>
-}
+const Calculator: React.FC<any> = (props) => {
+  const [formulaState, setFormulaState] = useState<string | null>(null);
+  const [resultState, setResultState] = useState<number | null>(null);
+  const [prevNumberState, setPrevNumberState] = useState<number | null>(null);
+  const [currentNumber, setCurrentNumber] = useState<string | null>(null);
+  const [currentOperator, setCurrentOperator] = useState<string | null>(null);
+  const [showResult, setShowResult] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [history, setHistory] = useState<Array<string>>([]);
+  
 
-class Calculator extends Component<any, CalculatorState> {
+  const numberClick = (value: number) => {
+    if (currentNumber === null) {
+      let newresult = resultState;
 
-  state: CalculatorState = {
-    formula: null,
-    result: null,
-    previousNumber: null,
-    currentNumber: null,
-    currentOperator: null,
-    showResult: false,
-    showError: false,
-    errorMessage: null,
-    history: []
-  };
-
-  numberClick = (value: number) => {
-    if (this.state.currentNumber === null) {
-      let currentOper = this.state.currentOperator;
-      let newresult = this.state.result;
-
-      if(currentOper !== null){
-        if(currentOper === "÷" && value === 0){
-          this.setState({currentNumber: null, currentOperator: null, errorMessage: "Cannot divide by Zero", showError: true, result: null, formula: null})
+      if (currentOperator !== null) {
+        if (currentOperator === "÷" && value === 0) {
+          setCurrentNumber(null);
+          setCurrentOperator(null);
+          setErrorMessage("Cannot divide by Zero");
+          setShowError(true);
+          setResultState(null);
+          setFormulaState(null);
           return;
         }
-        newresult = this.state.previousNumber;
+        newresult = prevNumberState;
       }
 
-      this.setState({ currentNumber: `${value}`, result: newresult, showResult:false, showError: false, errorMessage: null});
+      setCurrentNumber(`${value}`);
+      setResultState(newresult);
+      setShowResult(false);
+      setShowError(false);
+      setErrorMessage(null);
     } else {
-      let number = `${this.state.currentNumber}${value}`;
-      this.setState({ currentNumber: number });
+      setCurrentNumber(`${currentNumber}${value}`);
     }
   }
 
-  functionClick = (value: string) => {
+  const functionClick = (value: string) => {
     switch (value) {
       case "<":
-        this.backSpace();
+        backSpace();
         break;
       case "CE":
-        this.clearCurrentNumber();
+        clearCurrentNumber();
         break;
       case "C":
-        this.reset();
+        reset();
         break;
       case "+":
       case "-":
       case "x":
       case "÷":
-        this.arithmetic(value);
+        arithmetic(value);
         break;
       case "±":
-        this.negateNumber();
+        negateNumber();
         break;
       case ".":
-        this.decimalNumber();
+        decimalNumber();
         break;
       case "=":
-        this.equalsButton();
+        equalsButton();
         break;
     }
   };
 
-  decimalNumber(){
-    if(this.state.currentNumber === null){
-      let currentOper = this.state.currentOperator;
-      let newresult = this.state.result;
+  const decimalNumber = () => {
+    if (currentNumber === null) {
+      let newresult = resultState;
 
-      if(currentOper !== null){
-        newresult = this.state.previousNumber;
+      if (currentOperator !== null) {
+        newresult = prevNumberState;
       }
-      this.setState({currentNumber: '0.', result: newresult});
-    }else if(this.state.currentNumber.indexOf('.') < 0){
-      this.setState({currentNumber: `${this.state.currentNumber}.`});
-    }else{
+      setCurrentNumber('0.');
+      setResultState(newresult);
+    } else if (currentNumber.indexOf('.') < 0) {
+      setCurrentNumber(`${currentNumber}.`);
+    } else {
       return;
     }
-  }
+  };
 
-  negateNumber(){
-    if(this.state.currentNumber !== null){
-      let num = (+this.state.currentNumber) * -1;
-      this.setState({currentNumber: `${num}`});
+  const negateNumber = () => {
+    if (currentNumber !== null) {
+      let num = (+currentNumber) * -1;
+      setCurrentNumber(`${num}`);
+    }
+  };
+
+  const equalsButton = () => {
+    if (currentNumber !== null && currentOperator !== null && resultState !== null) {
+      let newResult = performOperator(resultState, +currentNumber, currentOperator);
+      let newFormula = `${formulaState} ${currentNumber} = ${newResult}`;
+      history.push(newFormula);
+      setResultState(null);
+      setFormulaState(null);
+      setShowResult(false);
+      setCurrentNumber(`${newResult}`);
+      setCurrentOperator(null);
     }
   }
 
-  equalsButton(){
-    if(this.state.currentNumber !== null && this.state.currentOperator !== null && this.state.result !== null){
-      let newResult = this.performOperator(this.state.result, +this.state.currentNumber, this.state.currentOperator);
-      let newFormula = `${this.state.formula} ${this.state.currentNumber} = ${newResult}`;
-      this.state.history.push(newFormula);
-      this.setState({result: null, formula: null, showResult: false, currentNumber: `${newResult}`, currentOperator: null});
-    }
-  }
-
-  arithmetic(value: string) {
-    let newformula = this.addOrUpdateLatestFormulaOperator(value);
+  const arithmetic = (value: string) => {
+    let newformula = addOrUpdateLatestFormulaOperator(value);
     if (newformula === null) {
       return;
     }
 
-    let newresult = this.state.result;
-    let prevNum = this.state.previousNumber;
+    let newresult = resultState;
+    let prevNum = prevNumberState;
     let showRes = false;
-    if(this.state.currentNumber !== null){
-      if(newresult !== null && this.state.currentOperator !== null){
-        newresult = this.performOperator(newresult, +this.state.currentNumber, this.state.currentOperator);
+    if (currentNumber !== null) {
+      if (newresult !== null && currentOperator !== null) {
+        newresult = performOperator(newresult, +currentNumber, currentOperator);
         showRes = true;
         prevNum = newresult;
-      }else{
-        prevNum = +this.state.currentNumber;
+      } else {
+        prevNum = +currentNumber;
       }
     }
 
-    this.setState({ formula: newformula, currentOperator: value, currentNumber: null, result: newresult, previousNumber: prevNum, showResult: showRes });
+    setFormulaState(newformula);
+    setCurrentOperator(value);
+    setCurrentNumber(null);
+    setResultState(newresult);
+    setPrevNumberState(prevNum);
+    setShowResult(showRes);
   };
 
-  performOperator(number1: number, number2: number, operator: string) : number {
-    switch(operator){
+  const performOperator = (number1: number, number2: number, operator: string): number => {
+    switch (operator) {
       case "+":
         return number1 + number2;
       case "-":
@@ -149,53 +151,50 @@ class Calculator extends Component<any, CalculatorState> {
     return 0;
   }
 
-  addOrUpdateLatestFormulaOperator(operator: string): string | null {
-    let formula = this.state.formula;
-    let curNum = this.state.currentNumber;
+  const addOrUpdateLatestFormulaOperator = (operator: string): string | null => {
+    let formula = formulaState;
 
-    if (formula === null && this.state.currentNumber === null) {
+    if (formula === null && currentNumber === null) {
       return null;
     }
 
     if (formula === null) {
-      formula = `${curNum} ${operator}`;
-    } else if (this.state.currentNumber === null) {
+      formula = `${currentNumber} ${operator}`;
+    } else if (currentNumber === null) {
       formula = `${formula.slice(0, -2)} ${operator}`;
     } else {
-      formula = `${formula} ${curNum} ${operator}`;
+      formula = `${formula} ${currentNumber} ${operator}`;
     }
     return formula;
   };
 
-  clearCurrentNumber() {
-    this.setState({ currentNumber: '0' });
+  const clearCurrentNumber = () => {
+    setCurrentNumber('0');
   };
 
-  reset() {
-    this.setState({
-      formula: null,
-      result: null,
-      previousNumber: null,
-      currentNumber: null,
-      currentOperator: null
-    });
+  const reset = () => {
+    setFormulaState(null);
+    setResultState(null);
+    setPrevNumberState(null);
+    setCurrentNumber(null);
+    setCurrentOperator(null);
   }
 
-  backSpace() {
-    if (this.state.currentNumber === null) {
+  const backSpace = () => {
+    if (currentNumber === null) {
       return;
     }
-    let numberString = `${this.state.currentNumber}`;
+    let numberString = `${currentNumber}`;
     if (numberString.length < 2) {
-      this.setState({ currentNumber: null });
+      setCurrentNumber(null)
       return;
     }
 
     numberString = numberString.slice(0, -1);
-    this.setState({ currentNumber: numberString });
+    setCurrentNumber(numberString);
   };
 
-  handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     switch (event.key) {
       case "0":
       case "1":
@@ -207,76 +206,74 @@ class Calculator extends Component<any, CalculatorState> {
       case "7":
       case "8":
       case "9":
-        this.numberClick(+event.key);
+        numberClick(+event.key);
         break;
       case "+":
       case "-":
       case "x":
       case "=":
-        this.functionClick(event.key);
+        functionClick(event.key);
         break;
       case "/":
-        this.functionClick("÷");
+        functionClick("÷");
         break;
       case "Backspace":
-        this.functionClick("<");
+        functionClick("<");
         break;
       case "Enter":
-        this.equalsButton();
+        equalsButton();
         break;
     }
   }
 
-  render() {
-    let resultValue : string | null = "";
-    if(this.state.showError){
-      resultValue = this.state.errorMessage;
-    }else if(this.state.showResult){
-      resultValue = `${this.state.result}`;
-    }else{
-      resultValue = this.state.currentNumber;
-    }
-    
-    //console.log(this.state);
-    return (
-      <div tabIndex={0} onKeyUp={this.handleKeyPress} className="container">
-        <div className="App">
-          <Result value={resultValue} formula={this.state.formula} />
-
-          <FunctionButton value={"CE"} click={this.functionClick} />
-          <FunctionButton value={"C"} click={this.functionClick} />
-          <FunctionButton value={"<"} click={this.functionClick} />
-
-          <FunctionButton value={"÷"} click={this.functionClick} />
-
-          <NumberButton value={7} click={this.numberClick} />
-          <NumberButton value={8} click={this.numberClick} />
-          <NumberButton value={9} click={this.numberClick} />
-
-          <FunctionButton value={"x"} click={this.functionClick} />
-
-          <NumberButton value={4} click={this.numberClick} />
-          <NumberButton value={5} click={this.numberClick} />
-          <NumberButton value={6} click={this.numberClick} />
-
-          <FunctionButton value={"-"} click={this.functionClick} />
-
-          <NumberButton value={1} click={this.numberClick} />
-          <NumberButton value={2} click={this.numberClick} />
-          <NumberButton value={3} click={this.numberClick} />
-
-          <FunctionButton value={"+"} click={this.functionClick} />
-
-          <FunctionButton value={"±"} click={this.functionClick} />
-          <NumberButton value={0} click={this.numberClick} />
-          <FunctionButton value={"."} click={this.functionClick} />
-
-          <FunctionButton value={"="} click={this.functionClick} />
-        </div>
-        <History formulaHistory={this.state.history} />
-      </div>
-    );
+  let resultValue: string | null = "";
+  if (showError) {
+    resultValue = errorMessage;
+  } else if (showResult) {
+    resultValue = `${resultState}`;
+  } else {
+    resultValue = currentNumber;
   }
+
+  return (
+    <div tabIndex={0} onKeyUp={handleKeyPress} className="container">
+      <div className="App">
+        <Result value={resultValue} formula={formulaState} />
+
+        <FunctionButton value={"CE"} click={functionClick} />
+        <FunctionButton value={"C"} click={functionClick} />
+        <FunctionButton value={"<"} click={functionClick} />
+
+        <FunctionButton value={"÷"} click={functionClick} />
+
+        <NumberButton value={7} click={numberClick} />
+        <NumberButton value={8} click={numberClick} />
+        <NumberButton value={9} click={numberClick} />
+
+        <FunctionButton value={"x"} click={functionClick} />
+
+        <NumberButton value={4} click={numberClick} />
+        <NumberButton value={5} click={numberClick} />
+        <NumberButton value={6} click={numberClick} />
+
+        <FunctionButton value={"-"} click={functionClick} />
+
+        <NumberButton value={1} click={numberClick} />
+        <NumberButton value={2} click={numberClick} />
+        <NumberButton value={3} click={numberClick} />
+
+        <FunctionButton value={"+"} click={functionClick} />
+
+        <FunctionButton value={"±"} click={functionClick} />
+        <NumberButton value={0} click={numberClick} />
+        <FunctionButton value={"."} click={functionClick} />
+
+        <FunctionButton value={"="} click={functionClick} />
+      </div>
+      <History formulaHistory={history} />
+    </div>
+  );
+
 }
 
 export default Calculator;
